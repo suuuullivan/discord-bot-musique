@@ -58,6 +58,7 @@ async def video(interaction: discord.Interaction, url: str):
             'format': 'bestaudio/best',
             'quiet': True,
             'noplaylist': True,
+            'cookiefile': 'www.youtube.com_cookies.txt'
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
