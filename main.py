@@ -6,9 +6,13 @@ import yt_dlp
 import asyncio
 import os
 import sys
+import shutil
 from keep_alive import keep_alive
 
 keep_alive()
+
+# Vérifie si ffmpeg est installé
+print("FFmpeg path:", shutil.which("ffmpeg"))
 
 TOKEN = os.getenv("DISCORD_TOKEN")
 
@@ -62,7 +66,9 @@ async def video(interaction: discord.Interaction, url: str):
         }
 
         with yt_dlp.YoutubeDL(ydl_opts) as ydl:
-            info = ydl.extract_info(url, download=False)
+            # Nettoie l'URL pour éviter les erreurs de format
+            clean_url = url.strip()
+            info = ydl.extract_info(clean_url, download=False)
             audio_url = info.get('url') or (info['formats'][0]['url'] if 'formats' in info else None)
 
         if not audio_url:
