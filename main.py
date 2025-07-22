@@ -12,7 +12,11 @@ from keep_alive import keep_alive
 keep_alive()
 
 # Vérifie si ffmpeg est installé
-print("FFmpeg path:", shutil.which("ffmpeg"))
+ffmpeg_path = shutil.which("ffmpeg")
+print("FFmpeg path:", ffmpeg_path)
+if not ffmpeg_path:
+    print("⚠️ FFmpeg introuvable. Vérifie ta config nixpacks.toml.")
+    sys.exit(1)
 
 TOKEN = os.getenv("DISCORD_TOKEN")
 
@@ -76,7 +80,7 @@ async def video(interaction: discord.Interaction, url: str):
             await vc.disconnect()
             return
 
-        source = discord.FFmpegPCMAudio(audio_url, **FFMPEG_OPTIONS)
+        source = discord.FFmpegPCMAudio(audio_url, executable=ffmpeg_path, **FFMPEG_OPTIONS)
         vc.play(source)
 
         await interaction.followup.send("Lecture en cours.")
